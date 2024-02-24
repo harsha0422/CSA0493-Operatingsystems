@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+void sortRequests(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void cscanDisk(int requestQueue[], int head, int size) {
+    int totalSeekOperations = 0;
+    int currentPosition = head;
+    int index = 0;
+
+    sortRequests(requestQueue, size);
+
+    while (index < size && requestQueue[index] < head) {
+        index++;
+    }
+
+    printf("C-SCAN Disk Scheduling Sequence: %d ", head);
+
+    for (int i = index; i < size; i++) {
+        printf("%d ", requestQueue[i]);
+        totalSeekOperations += abs(currentPosition - requestQueue[i]);
+        currentPosition = requestQueue[i];
+    }
+
+    printf("0 ");
+    totalSeekOperations += abs(currentPosition);
+
+    for (int i = 0; i < index; i++) {
+        printf("%d ", requestQueue[i]);
+        totalSeekOperations += abs(currentPosition - requestQueue[i]);
+        currentPosition = requestQueue[i];
+    }
+
+    printf("\nTotal Seek Operations: %d\n", totalSeekOperations);
+}
+
+int main() {
+    int size, head;
+
+    printf("Enter the size of the request queue: ");
+    scanf("%d", &size);
+
+    int requestQueue[size];
+
+    printf("Enter the request queue elements:\n");
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &requestQueue[i]);
+    }
+
+    printf("Enter the initial position of the disk head: ");
+    scanf("%d", &head);
+
+    cscanDisk(requestQueue, head, size);
+
+    return 0;
+}
